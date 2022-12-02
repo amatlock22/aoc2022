@@ -15,11 +15,9 @@ func main() {
 
 func part1() int {
 	file, _ := os.Open("input.txt")
-
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-
 	maxCals, currentCals := 0, 0
 
 	for scanner.Scan() {
@@ -43,11 +41,9 @@ func part1() int {
 
 func part2() int {
 	file, _ := os.Open("input.txt")
-
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-
 	allCals := []int{}
 	currentCals := 0
 
