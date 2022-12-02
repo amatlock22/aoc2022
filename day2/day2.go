@@ -34,22 +34,8 @@ func part1() int {
 	totalPoints := 0
 
 	for scanner.Scan() {
-		line := scanner.Text()
-		split := strings.Split(line, " ")
-		opp := split[0]
-		me := split[1]
-		outcomePoints := 0
-
-		result := play(opp, me)
-
-		switch result {
-		case 0:
-			outcomePoints = 3
-		case 1:
-			outcomePoints = 6
-		}
-
-		totalPoints += outcomePoints + valMap[me]
+		split := strings.Split(scanner.Text(), " ")
+		totalPoints += play(split[0], split[1]) + valMap[split[1]]
 	}
 
 	return totalPoints
@@ -57,14 +43,14 @@ func part1() int {
 
 func play(opp, me string) int {
 	if outcomesMap[opp].Lose == me {
-		return 1 // I win
+		return 6 // I win
 	}
 
 	if outcomesMap[opp].Win == me {
-		return -1 // I lose
+		return 0 // I lose
 	}
 
-	return 0 // Draw
+	return 3 // Draw
 }
 
 func part2() int {
@@ -75,12 +61,10 @@ func part2() int {
 	totalPoints := 0
 
 	for scanner.Scan() {
-		line := scanner.Text()
-		split := strings.Split(line, " ")
+		split := strings.Split(scanner.Text(), " ")
 		opp := split[0]
-		end := split[1]
 
-		switch end {
+		switch split[1] {
 		case "X": // lose
 			totalPoints += valMap[outcomesMap[opp].Win]
 		case "Y": // draw
