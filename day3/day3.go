@@ -11,7 +11,7 @@ func main() {
 	fmt.Println("Part 2:", part2())
 }
 
-func part1() int32 {
+func part1() rune {
 	var totalPriority rune
 
 	file, _ := os.Open("input.txt")
@@ -55,7 +55,7 @@ func getRunes(compartment string) map[rune]struct{} {
 	return runes
 }
 
-func part2() int32 {
+func part2() rune {
 	var totalPriority rune
 
 	file, _ := os.Open("input.txt")
