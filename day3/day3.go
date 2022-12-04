@@ -37,7 +37,7 @@ func part1() rune {
 	return totalPriority
 }
 
-func getPriority(i int32) int32 {
+func getPriority(i rune) rune {
 	if i <= 90 {
 		return i - 38 // uppercase letters
 	}
