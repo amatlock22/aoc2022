@@ -45,11 +45,11 @@ func getPriority(i int32) int32 {
 	return i - 96 // lowercase letters
 }
 
-func getRunes(compartment string) map[rune]struct{} {
-	runes := make(map[rune]struct{}, len(compartment))
+func getRunes(compartment string) map[rune]bool {
+	runes := make(map[rune]bool, len(compartment))
 
 	for _, char := range compartment {
-		runes[char] = struct{}{}
+		runes[char] = true
 	}
 
 	return runes
@@ -73,10 +73,7 @@ func part2() rune {
 			runes1 := getRunes(rucksacks[1])
 
 			for _, r := range rucksacks[2] {
-				_, ok0 := runes0[r]
-				_, ok1 := runes1[r]
-
-				if ok0 && ok1 {
+				if runes0[r] && runes1[r] {
 					totalPriority += getPriority(r)
 
 					break
