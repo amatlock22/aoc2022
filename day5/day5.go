@@ -62,7 +62,10 @@ func part2() string {
 
 func parseCrates(scanner *bufio.Scanner) [][]string {
 	crates := [][]string{}
-	addStacks := true
+
+	for i := 0; i < 10; i++ { // only 10 crate stacks for problem
+		crates = append(crates, make([]string, 0))
+	}
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -73,23 +76,14 @@ func parseCrates(scanner *bufio.Scanner) [][]string {
 			break
 		}
 
-		crateLine := []string{}
-
 		for i := 1; i < len(line); i += 4 {
-			crateLine = append(crateLine, string(line[i]))
-
-			if addStacks {
-				crates = append(crates, make([]string, 0))
-			}
-
+			val := string(line[i])
 			stackNum := (i - 1) / 4
 
-			if crateLine[stackNum] != " " {
-				crates[stackNum] = append(crates[stackNum], crateLine[stackNum])
+			if val != " " {
+				crates[stackNum] = append(crates[stackNum], val)
 			}
 		}
-
-		addStacks = false
 	}
 
 	return crates
@@ -122,7 +116,9 @@ func getTopCrates(crates [][]string) string {
 	var topLine string
 
 	for i := 0; i < len(crates); i++ {
-		topLine += crates[i][0]
+		if len(crates[i]) > 0 {
+			topLine += crates[i][0]
+		}
 	}
 
 	return topLine
