@@ -25,16 +25,18 @@ func part1() string {
 
 	scanner := bufio.NewScanner(file)
 	crates := parseCrates(scanner)
-	moves := parseMoves(scanner)
-	crates = executeMoves(moves, crates, "9000")
 
-	var topLine string
+	for _, move := range parseMoves(scanner) {
+		for i := 0; i < move.Num; i++ {
+			start := move.Start - 1
+			end := move.End - 1
 
-	for i := range crates[0] {
-		topLine += crates[findCurrentCrateRow(crates, i)][i]
+			crates[end] = append([]string{crates[start][0]}, crates[end]...)
+			crates[start] = crates[start][1:]
+		}
 	}
 
-	return topLine
+	return getTopCrates(crates)
 }
 
 func part2() string {
@@ -43,68 +45,24 @@ func part2() string {
 
 	scanner := bufio.NewScanner(file)
 	crates := parseCrates(scanner)
-	moves := parseMoves(scanner)
-	crates = executeMoves(moves, crates, "9001")
 
-	var topLine string
+	for _, move := range parseMoves(scanner) {
+		start := move.Start - 1
+		end := move.End - 1
 
-	for i := range crates[0] {
-		topLine += crates[findCurrentCrateRow(crates, i)][i]
+		startCopy := make([]string, len(crates[start]))
+		copy(startCopy, crates[start])
+
+		crates[end] = append(startCopy[:move.Num], crates[end]...)
+		crates[start] = crates[start][move.Num:]
 	}
 
-	return topLine
+	return getTopCrates(crates)
 }
 
-func executeMoves(moves []Move, crates [][]string, version string) [][]string {
-	for _, move := range moves {
-		for i := 0; i < move.Num; i++ {
-			start := move.Start - 1
-			end := move.End - 1
-			currentRow := findCurrentCrateRow(crates, start)
-			newRow := findNewCrateRow(crates, end)
+func parseCrates(scanner *bufio.Scanner) [][]string {
+	crates := [][]string{}
 
-			if version == "9001" { // lmao don't judge me
-				currentRow += move.Num - 1 - i
-			}
-
-			if newRow == -1 { // prepend new row
-				tmp := [][]string{make([]string, len(crates[0]))}
-				crates = append(tmp, crates...)
-				newRow = 0
-				currentRow++
-			}
-
-			crates[newRow][end] = crates[currentRow][start]
-			crates[currentRow][start] = ""
-		}
-	}
-
-	return crates
-}
-
-func findNewCrateRow(crates [][]string, col int) int {
-	for i := len(crates) - 1; i >= 0; i-- {
-		if crates[i][col] == "" { // find first opening on top of a crate (or floor)
-			return i
-		}
-	}
-
-	return -1
-}
-
-func findCurrentCrateRow(crates [][]string, col int) int {
-	for i := 0; i < len(crates); i++ {
-		if crates[i][col] == "" { // skip until we find a crate
-			continue
-		}
-
-		return i
-	}
-
-	return -1
-}
-
-func parseCrates(scanner *bufio.Scanner) (crates [][]string) {
 	for scanner.Scan() {
 		line := scanner.Text()
 
@@ -117,16 +75,20 @@ func parseCrates(scanner *bufio.Scanner) (crates [][]string) {
 		crateLine := []string{}
 
 		for i := 1; i < len(line); i += 4 {
-			val := string(line[i])
-
-			if val == " " {
-				val = ""
-			}
-
-			crateLine = append(crateLine, val)
+			crateLine = append(crateLine, string(line[i]))
 		}
 
-		crates = append(crates, crateLine)
+		if len(crates) < len(crateLine) {
+			for range crateLine {
+				crates = append(crates, make([]string, 0))
+			}
+		}
+
+		for i := range crateLine {
+			if crateLine[i] != " " {
+				crates[i] = append(crates[i], crateLine[i])
+			}
+		}
 	}
 
 	return crates
@@ -153,4 +115,14 @@ func stringToInt(s string) int {
 	}
 
 	return i
+}
+
+func getTopCrates(crates [][]string) string {
+	var topLine string
+
+	for i := 0; i < len(crates); i++ {
+		topLine += crates[i][0]
+	}
+
+	return topLine
 }
