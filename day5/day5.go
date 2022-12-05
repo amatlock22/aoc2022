@@ -62,6 +62,7 @@ func part2() string {
 
 func parseCrates(scanner *bufio.Scanner) [][]string {
 	crates := [][]string{}
+	addStacks := true
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -76,19 +77,19 @@ func parseCrates(scanner *bufio.Scanner) [][]string {
 
 		for i := 1; i < len(line); i += 4 {
 			crateLine = append(crateLine, string(line[i]))
-		}
 
-		if len(crates) < len(crateLine) {
-			for range crateLine {
+			if addStacks {
 				crates = append(crates, make([]string, 0))
 			}
-		}
 
-		for i := range crateLine {
-			if crateLine[i] != " " {
-				crates[i] = append(crates[i], crateLine[i])
+			stackNum := (i - 1) / 4
+
+			if crateLine[stackNum] != " " {
+				crates[stackNum] = append(crates[stackNum], crateLine[stackNum])
 			}
 		}
+
+		addStacks = false
 	}
 
 	return crates
