@@ -20,7 +20,7 @@ func part1() int {
 	line := scanner.Text()
 
 	for i := range line {
-		if !isDuplicate(line[i : i+4]) {
+		if !hasDuplicate(line[i : i+4]) {
 			return i + 4
 		}
 	}
@@ -28,7 +28,7 @@ func part1() int {
 	return 0
 }
 
-func isDuplicate(chars string) bool {
+func hasDuplicate(chars string) bool {
 	duplicateMap := make(map[rune]bool)
 
 	for _, c := range chars {
@@ -51,7 +51,7 @@ func part2() int {
 	line := scanner.Text()
 
 	for i := range line {
-		if !isDuplicate(line[i : i+14]) {
+		if !hasDuplicate(line[i : i+14]) {
 			return i + 14
 		}
 	}
