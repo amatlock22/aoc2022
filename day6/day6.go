@@ -32,7 +32,7 @@ func hasDuplicate(chars string) bool {
 	duplicateMap := make(map[rune]bool)
 
 	for _, c := range chars {
-		if _, ok := duplicateMap[c]; ok {
+		if duplicateMap[c] {
 			return true // there is a duplicate
 		} else {
 			duplicateMap[c] = true
